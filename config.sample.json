@@ -1,0 +1,13 @@
+{
+
+"sitename" : "dejframework Powered Site",
+
+"db_type" : "mysql",
+"db_host" : "DB host here",
+"db_name" : "DB name here",
+"db_username" : "DB Username here",
+"db_password" : "DB password here",
+
+"uri_prefix" : ""
+
+ }
