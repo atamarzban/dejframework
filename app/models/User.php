@@ -7,7 +7,7 @@ namespace app\models;
 */
 class User extends \dej\mvc\Model
 {
-
+	//TODO Optional Auth
 	protected static $dbTable = "users";
 	protected static $dbFields = ["username" => "username",
 																"password" => "password",

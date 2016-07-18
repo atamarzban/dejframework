@@ -8,7 +8,7 @@ use \dej\App;
 */
 class Model
 {
-
+	//TODO Data Validation on Model & Request
 	public $id;
 	protected static $dbTable;
 	protected static $dbFields = [];

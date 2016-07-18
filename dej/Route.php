@@ -36,6 +36,7 @@ class Route
 		 	$controllerName = "\app\controllers\\" . $controllerAction[0];
 		 	$actionName = $controllerAction[1];
 		 	$controllerName::$actionName();
+			 //TODO Controllers should return response
 		 }
 		 exit();
 	}

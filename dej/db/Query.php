@@ -7,7 +7,8 @@ use \dej\App;
 * Query Generator Class.
 */
 class Query
-{
+{	
+	//TODO Review & Refactor
 	//produced query
 	private $query;
 	//\dej\db\Connection Instance
