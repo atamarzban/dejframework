@@ -1,6 +1,6 @@
 <?php
 
-namespace dej;
+namespace dej\http;
 
 /**
 * Request Class

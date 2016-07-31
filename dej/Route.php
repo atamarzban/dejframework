@@ -1,6 +1,5 @@
 <?php
 namespace dej;
-use \dej\Request;
 use \dej\App;
 use \dej\mvc\Controller;
 

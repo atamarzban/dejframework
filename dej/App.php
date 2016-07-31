@@ -18,7 +18,7 @@ class App
         		break;
 
         	case 'Request':
-        		return \dej\Request::getInstance();
+        		return \dej\http\Request::getInstance();
         		break;
 
             case 'Connection':
