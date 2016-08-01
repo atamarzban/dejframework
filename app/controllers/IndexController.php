@@ -3,9 +3,7 @@ namespace app\controllers;
 use \dej\App;
 use \app\models\User;
 
-/**
-*
-*/
+
 class IndexController extends \dej\mvc\Controller
 {
 

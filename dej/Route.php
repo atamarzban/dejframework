@@ -35,6 +35,7 @@ class Route
 		 	if (count($controllerAction) != 2) throw new \Exception("ControllerName@ActionName is not provided correctly in Route {$method}:{$uri}");
 		 	$controllerName = "\app\controllers\\" . $controllerAction[0];
 		 	$actionName = $controllerAction[1];
+             //Call The Controller Dispatcher
             ControllerDispatcher::handle($controllerName, $actionName);
 		 }
 
