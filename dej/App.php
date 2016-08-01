@@ -33,6 +33,10 @@ class App
                 return new \dej\mvc\View($arguments[0], $arguments[1]);
                 break;
 
+            case 'Response':
+                return new \dej\http\Response();
+                break;
+
         	default:
         		throw new \Exception("Class not found by App Service Provider");
 

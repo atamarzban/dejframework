@@ -13,7 +13,10 @@ use \dej\App;
 Route::set("GET", "/", "IndexController@index");
 
 
+
 //if no routes caught, give a 404 response.
-echo "404: Not Found";
+App::Response()->code(404)->header("HTTP/1.0 404 Not Found")->body("404 Not Found")->toOutput();
+
 exit();
+
 ?>

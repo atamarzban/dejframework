@@ -2,6 +2,7 @@
 namespace dej;
 use \dej\App;
 use \dej\mvc\Controller;
+use \dej\mvc\controller\Dispatcher as ControllerDispatcher;
 
 /**
 * Route Class
@@ -34,10 +35,9 @@ class Route
 		 	if (count($controllerAction) != 2) throw new \Exception("ControllerName@ActionName is not provided correctly in Route {$method}:{$uri}");
 		 	$controllerName = "\app\controllers\\" . $controllerAction[0];
 		 	$actionName = $controllerAction[1];
-		 	$controllerName::$actionName();
-			 //TODO Controllers should return response
+            ControllerDispatcher::handle($controllerName, $actionName);
 		 }
-		 exit();
+
 	}
 
 }
