@@ -8,13 +8,13 @@ use \dej\App;
 */
 class Model
 {
-	//TODO Data Validation on Model & Request
 	public $id;
 	protected static $dbTable;
 	protected static $dbFields = [];
 	protected static $modelName;
+    protected static $validationRules = [];
 
-	function __construct()
+    function __construct()
 	{
 
 	}
@@ -91,6 +91,18 @@ class Model
 		}
 
 	}
+
+    public function validate()
+    {
+        if (empty(static::$validationRules)) throw new \Exception("Please Provide ".static::$modelName." with validationRules");
+        return App::Validator()->validate($this, static::$validationRules);
+    }
+
+	public function isValid()
+    {
+        if (empty($this->validate())) return true;
+        else return false;
+    }
 
 	public function __toString()
 	{

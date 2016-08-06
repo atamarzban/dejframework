@@ -36,12 +36,17 @@ class App
             case 'Response':
                 return new \dej\http\Response();
                 break;
-
+            
         	default:
         		throw new \Exception("Class not found by App Service Provider");
 
         		break;
         }
+    }
+
+    public static function Validator()
+    {
+        return \dej\Validator::getInstance();
     }
 
 }

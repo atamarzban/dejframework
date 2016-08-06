@@ -7,15 +7,17 @@ use \app\models\User;
 class IndexController extends \dej\mvc\Controller
 {
 
-	function __construct()
-	{
+    function __construct()
+    {
 
-	}
+    }
 
-	public static function index()
-	{
+    public static function index()
+    {
+
         return App::View('index', ["message" => "Welcome To dejframework!"]);
-	}
+        
+    }
 
 }
 ?>

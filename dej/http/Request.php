@@ -2,6 +2,8 @@
 
 namespace dej\http;
 
+use \dej\App;
+
 /**
 * Request Class
 */
@@ -68,6 +70,17 @@ class Request extends \dej\common\Singleton
 	{
 
 	}
+
+    public function all()
+    {
+        return $_REQUEST;
+	}
+
+    public function validate($rules = null)
+    {
+        if ($rules == null) throw new \Exception("Provide rules in request->validate(rules)");
+        return App::Validator()->validate($_REQUEST, $rules);
+    }
 
 }
 
