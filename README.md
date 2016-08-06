@@ -15,7 +15,7 @@ dejframework is a simple and minimal PHP MVC framework focused on conciseness, s
 - Method-Chaining Query Builder.
 - Object-Relational Mapping (ORM) Built into the Models.
 - Easily interact with the HTTP protocol with the Request/Response Objects. (Getting & Setting headers, status codes, etc.)
-- Seperate your UI and Data Presentation with Views.
+- Separate your UI and Data Presentation with Views.
 - Auto-Converting Objects to JSON makes REST API Implementation easy.
 - Validate Data on a Request, a Model or anything else easily with Validation Rules.
 - Multi-Language Validation errors with string formatting.
@@ -30,7 +30,7 @@ dejframework is a simple and minimal PHP MVC framework focused on conciseness, s
 - To set up your development environment, Clone this repository or download it and put it on the machine of your choice.
 - Configure a Virtual Host on Apache and set the **/public** folder as the Document Root. All Requests go through the **/public/index.php** file on this folder. Also Enable "Mod_Rewrite" and set "AllowOverride All" on the Virtual Host.
 - Rename **/config.sample.json** to **config.json**.
-- Thats it!
+- That's it!
 
 # Routing
 For the framework to know what to do when a request comes, you should set routes for your applications in /app/routes.php. It is done easily.
@@ -65,7 +65,7 @@ This code will output "This is some url!" if a you visit your site on yoursite.c
 
 Route::set("POST", "/do/something", function(){
 
-  return "Here you should write you own code to do the things you want.";
+  return "Here you should write your own code to do the things you want.";
 
 });
 ```
@@ -97,11 +97,11 @@ class YourController extends \dej\mvc\Controller
 }
 ```
 **Important:** As you can see in the example above, For the PSR-0 Autoloader to function correctly, you should follow the following conventions when adding any class to your application:
-- The Namespace of the class should map to it's directory. (Case-Senstive)
-- The Name of the class should be the same as the php file name. (Case-Senstive)
+- The Namespace of the class should map to it's directory. (Case-Sensitive)
+- The Name of the class should be the same as the php file name. (Case-Sensitive)
 If these conventions are followed, you won't need to include classes manually, as they will be autoloader when you use them in your code.
 
-Now let's continue learing how to make controllers work:
+Now let's continue learning how to make controllers work:
 - after creating you controller and setting it's name and namespace correctly, set your routes like this:
 
 ```php
@@ -112,7 +112,7 @@ Route::set("GET", "/", "YourController@YourAction");
 
 The specified action on the specified controller will be executed when the route triggers.
 # Service Provider / Dependency Injector
-Constantly Instantianting classes and passing dependencies to them can become a repetitive task in php development. The \dej\App Service provider aims to makes this process as DRY as possible. Using this service provider, you don't need to add **use** statements in each file and pass dependencies. Take This example:
+Constantly Instantiating classes and passing dependencies to them can become a repetitive task in php development. The \dej\App Service provider aims to makes this process as DRY as possible. Using this service provider, you don't need to add **use** statements in each file and pass dependencies. Take This example:
 
 ```php
 /** 
@@ -130,24 +130,28 @@ $result = $query->select()->from('someTable');
 return $result;
 ```
 
-And this should be repeated everytime you want to use the query builder.
+And this should be repeated every time you want to use the query builder.
 Now, using the Service Provider:
 
 ```php
 use \dej\App;
 return App::Query()->select()->from('some_table');
 ```
-That's it! Take a look at **dej/App.php** to see how it works. An static method named 'Query' is called on the App class. It instantiates the Query class and passes a conncetion instance as the constructor parameters to it. Piece of cake!
+That's it! Take a look at **dej/App.php** to see how it works. An static method named 'Query' is called on the App class. It instantiates the Query class and passes a connection instance as the constructor parameters to it. Piece of cake!
 
 # Database
 dejframework deals with databases in a 3-Layer Architecture:
--**Layer 1 - Database Connection:** This extends the Singleton abstract class. What that means is that it is instantiated only once, the first time it's called. Some other services on dejframework are like this too. To prevent the overhead of connecting to the DB everytime you want to run a Query. Here is how you can use it:
+-**Layer 1 - Database Connection:** This extends the Singleton abstract class. What that means is that it is instantiated only once, the first time it's called. Some other services on dejframework are like this too. To prevent the overhead of connecting to the DB every time you want to run a Query. Here is how you can use it:
 
 ```php
 //simple query
 $result = App::Connection()->executeQuery("SELECT * FROM some_table");
 
+//NonQuery: a query that doesn't return rows, only the number of affected rows.
 $result = App::Connection()->executeNonQuery("DELETE FROM some_table WHERE some_field = 'some_value'");
+
+//A Query using prepared statements, To protect against SQL Injection.
+$result = App::Connection()->executeQuery("SELECT * FROM some_table WHERE some_field = ?", ["some_value"]);
 ```
 
 //TODO Complete Documentation
