@@ -185,11 +185,18 @@ $result = $query->getAll();
 ```
 Let's see other methods available on the query builder in the following examples:
 ```php
-//SELECT with WHERE, query will be executed using prepared statements and parameters will be handled automatically.
+//SELECT with WHERE. All queries will be executed using prepared statements and parameters will be handled automatically.
 $result = App::Query()->select()->from('users')->where('id', '=', '22')->getAll();
 
-$result = App::Query()->select()->from('users')->where('city', '=', 'Berlin')->
-                                                andWhere->('age', '>', '20')->getAll();
+$result = App::Query()->select()->from('users')->where('city', '=', 'Berlin')
+                                                ->andWhere('age', '>', '20')->getAll();
+
+$result = App::Query()->select()->from('users')->where('city', '=', 'Berlin')
+                                                ->orWhere('city', '=', 'Paris')->getAll();
+
+$result = App::Query()->select()->from('users')->orderBy('age', 'DESC')
+                                                ->limit(25)
+                                                ->offset(50)->getAll();
 ```
 
 //TODO Complete Documentation
