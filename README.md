@@ -173,8 +173,10 @@ $result = App::Query()->select()->from('users')->getAll();
 $result = App::Query()->select()->from('users')->getOne();
 
 $result = App::Query()->select()->from('users')->getJson();
+
+$query = App::Query()->select()->from('users')->getQuery();
 ```
-As you can see, using the dej Query Builder is simple, use call App::Query() and it automatically passes a new, dependency injected Query class to you, and then you chain methods on it to add conditions of your liking to it, such as select(), from() and so on, then finally, you use one of the get methods to fetch either the top result (```php getOne() ```), All results (```php getAll() ```), Or all results as JSON (```php getJson() ```). The results are fetched in stdClass format that you can use easily. It's worth noting that without using one of the get methods at the end of you query, the results won't be fetched. Also, you can chain methods on multiple lines and in multiple steps, for example, to change it by some condition:
+As you can see, using the dej Query Builder is simple, use call App::Query() and it automatically passes a new, dependency injected Query class to you, and then you chain methods on it to add conditions of your liking to it, such as select(), from() and so on, then finally, you use one of the get methods to fetch either the top result (```php getOne() ```), All results (```php getAll() ```), All results as JSON (```php getJson() ```), Or the constructed query (```php getQuery() ```). The results are fetched in stdClass format that you can use easily. It's worth noting that without using one of the get methods at the end of you query, the results won't be fetched. Also, you can chain methods on multiple lines and in multiple steps, for example, to change it by some condition:
 ```php
 $query = App::Query()->select();
 
@@ -185,7 +187,8 @@ $result = $query->getAll();
 ```
 Let's see other methods available on the query builder in the following examples:
 ```php
-//SELECT with WHERE. All queries will be executed using prepared statements and parameters will be handled automatically.
+//All queries will be executed using prepared statements and parameters will be handled automatically.
+//SELECT Queries:
 $result = App::Query()->select()->from('users')->where('id', '=', '22')->getAll();
 
 $result = App::Query()->select()->from('users')->where('city', '=', 'Berlin')
@@ -197,6 +200,24 @@ $result = App::Query()->select()->from('users')->where('city', '=', 'Berlin')
 $result = App::Query()->select()->from('users')->orderBy('age', 'DESC')
                                                 ->limit(25)
                                                 ->offset(50)->getAll();
+
+//INSERT Query:
+$affectedRows = App::Query()->insertInto('users')->values(["username" => "jameshetfield",
+                                                      "password" => "19831983",
+                                                      "city" => "Downey"])->do();
 ```
+**Note That** Queries that don't return results, must be executed with ```php do() ``` and it will automatically return the number of affected rows.
+```php
+//UPDATE Query:
+$affectedRows = App::Query()->update('users')->set(["age" => 53,
+                                                    "band" => "Metallica"])
+                                                ->where('username', '=', 'jameshetfield')->do();
+
+//DELETE Query:
+$affectedRows = App::Query()->deleteFrom('users')->where('username', '=', 'someone')->do();
+```
+**Note That** DELETE or UPDATE Queries can result in loss of data if there's no WHERE clause provided, as a security measure, dejframework will throw an exception if it encounters such a situation. Please run such queries using the Connection class manually.
+
+
 
 //TODO Complete Documentation
