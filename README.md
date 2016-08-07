@@ -340,9 +340,7 @@ $userCount = User::count()->where('city', '=', 'Sari')->getInt(); //getInt() ret
 # Data Validation
 Data Validation in dejframework is handled by The ```\dej\Validator``` Class. You can use it in various ways:
 
-1. **Standalone:** You can use the validation service anywhere in your application with ```App::Validator()``` which gives you the singleton instance of it. It accepts 2 parameters:
-- A **Value** to be validated. (String, Int, Array, Object)
-- A set of **Rules** to validate the data against.
+1. **Standalone:** You can use the validation service anywhere in your application with ```App::Validator()``` which gives you the singleton instance of it. It accepts 2 parameters: A **Value** to be validated. (String, Int, Array, Object) and a set of **Rules** to validate the data against.
 Let's see how it works:
 ```php
 use \dej\App;
