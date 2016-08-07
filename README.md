@@ -152,6 +152,15 @@ $result = App::Connection()->executeNonQuery("DELETE FROM some_table WHERE some_
 
 //A Query using prepared statements, To protect against SQL Injection.
 $result = App::Connection()->executeQuery("SELECT * FROM some_table WHERE some_field = ?", ["some_value"]);
+
+//A Query using prepared statements, To protect against SQL Injection. With Multiple Parameters.
+$result = App::Connection()->executeQuery("SELECT * FROM some_table WHERE some_field = ? AND another_field = ?", [$some_value, "another_value"]);
+
+//A Query using prepared statements, To protect against SQL Injection. With Named Parameters.
+$result = App::Connection()->executeQuery("SELECT * FROM some_table WHERE some_field = :some_value_name AND another_field = :another_value_name", [":some_value_name" => $some_value,
+"another_value_name" => "another_value"]);
 ```
+
+
 
 //TODO Complete Documentation
