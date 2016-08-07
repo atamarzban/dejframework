@@ -246,6 +246,7 @@ class User extends \dej\mvc\Model
 	.
 	.
 	.
+	}
 ```
 3. For the Model to know which of it's properties correspond to which Database table columns, set it as a class property, Ideally, their names should be the same.
 ```php
@@ -265,6 +266,7 @@ class User extends \dej\mvc\Model
 	.
 	.
 	.
+	}
 ```
 **Note That** The ``` id ``` property is defined in the ```/dej/mvc/Model``` class that your models extend. Thus, if you want your Model to have an id, there's no need to define it again.
 4. In Order for the model to know it's own name, set it as a class property:
@@ -285,6 +287,7 @@ class User extends \dej\mvc\Model
 	.
 	.
 	.
+	}
 ```
 
 **That's it for now,** provided that you have set these configurations correctly, you will be able to use the ORM methods on your Models. Take a look at the examples below:
