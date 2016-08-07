@@ -226,6 +226,7 @@ $affectedRows = App::Query()->deleteFrom('users')->where('username', '=', 'someo
 # Object-Relational Mapping
 According to Wikipedia:
 >Object-relational mapping (ORM) ... is a programming technique for converting data between incompatible type systems in >object-oriented programming languages. This creates, in effect, a "virtual object database" that can be used from within the >programming language.
+
 Since dejframework works in an MVC Architecture, Data persistence is contained in the Model component of MVC. Models relate to the entities in your application, such as a User, a Purchase, a Product, etc. in a shopping system. They need to be saved and retrieved to and from the database. Relational databases work in the SQL language, and dejframeworkm like most frameworks operates in an Object-Oriented environment. And SQL code in the middle of PHP code is considered not to be best-practice. Thus, dejframework tries to seperate you from SQL code in 3 levels, 2 of them were elaborated in the previous section, now we will see how to work with Models:
 1. Create your Model in **/dej/app/models**. Be sure to follow the PSR-0 namespacing conventions. an example is set up for you, named **User.php**, Also, Create the corresponding table and fields in the Database.
 2. Add the properties that your model has. (According to your design: for example username, password and city for User)
