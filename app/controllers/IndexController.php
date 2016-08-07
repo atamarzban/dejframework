@@ -15,8 +15,13 @@ class IndexController extends \dej\mvc\Controller
     public static function index()
     {
 
-        return App::View('index', ["message" => "Welcome To dejframework!"]);
-        
+        //return App::View('index', ["message" => "Welcome To dejframework!"]);
+
+        $result = App::Query()->select()->from('users')->getInt();
+
+
+        var_dump($result);
+
     }
 
 }

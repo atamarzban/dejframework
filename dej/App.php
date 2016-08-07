@@ -49,6 +49,11 @@ class App
         return \dej\Validator::getInstance();
     }
 
+    public static function Query($getType = null)
+    {
+        return new \dej\db\Query(\dej\db\Connection::getInstance(), $getType);
+    }
+
 }
 
 ?>

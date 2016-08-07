@@ -126,7 +126,7 @@ $connection = Connection::getInstance();
 use \dej\db\Query;
 $query = new Query($connection);
 
-$result = $query->select()->from('someTable');
+$result = $query->select()->from('someTable')->getAll();
 return $result;
 ```
 
@@ -140,8 +140,11 @@ return App::Query()->select()->from('some_table');
 That's it! Take a look at **dej/App.php** to see how it works. An static method named 'Query' is called on the App class. It instantiates the Query class and passes a connection instance as the constructor parameters to it. Piece of cake!
 
 # Database
+**Configuration:** First enter the database configuration in **/config.json**.
 dejframework deals with databases in a 3-Layer Architecture:
--**Layer 1 - Database Connection:** This extends the Singleton abstract class. What that means is that it is instantiated only once, the first time it's called. Some other services on dejframework are like this too. To prevent the overhead of connecting to the DB every time you want to run a Query. Here is how you can use it:
+
+**Layer 1 - Database Connection Object:**
+This extends the Singleton abstract class. What that means is that it is instantiated only once, the first time it's called. Some other services on dejframework are like this too. To prevent the overhead of connecting to the DB every time you want to run a Query. Here is how you can use it:
 
 ```php
 //simple query
@@ -160,7 +163,33 @@ $result = App::Connection()->executeQuery("SELECT * FROM some_table WHERE some_f
 $result = App::Connection()->executeQuery("SELECT * FROM some_table WHERE some_field = :some_value_name AND another_field = :another_value_name", [":some_value_name" => $some_value,
 "another_value_name" => "another_value"]);
 ```
+You can do this anywhere, provided that you have added ```php use \dej\App; ```.
 
+-**Layer 2 - Query Builder:**
+This class builds queries and uses the Connection class to run them using secure prepared statements. It should be instantiated for each new query, this is done for you by /dej/App automatically each time you type ```php App::Query() ```, just like we saw in the Service Povider section example. You can build queries with it using method chaining. Take a look at the examples below:
+```php
+$result = App::Query()->select()->from('users')->getAll();
 
+$result = App::Query()->select()->from('users')->getOne();
+
+$result = App::Query()->select()->from('users')->getJson();
+```
+As you can see, using the dej Query Builder is simple, use call App::Query() and it automatically passes a new, dependency injected Query class to you, and then you chain methods on it to add conditions of your liking to it, such as select(), from() and so on, then finally, you use one of the get methods to fetch either the top result (```php getOne() ```), All results (```php getAll() ```), Or all results as JSON (```php getJson() ```). The results are fetched in stdClass format that you can use easily. It's worth noting that without using one of the get methods at the end of you query, the results won't be fetched. Also, you can chain methods on multiple lines and in multiple steps, for example, to change it by some condition:
+```php
+$query = App::Query()->select();
+
+if($somecondition == true ) $query->from('users');
+else $query->from('another_table');
+
+$result = $query->getAll();
+```
+Let's see other methods available on the query builder in the following examples:
+```php
+//SELECT with WHERE, query will be executed using prepared statements and parameters will be handled automatically.
+$result = App::Query()->select()->from('users')->where('id', '=', '22')->getAll();
+
+$result = App::Query()->select()->from('users')->where('city', '=', 'Berlin')->
+                                                andWhere->('age', '>', '20')->getAll();
+```
 
 //TODO Complete Documentation
