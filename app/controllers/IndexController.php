@@ -17,10 +17,9 @@ class IndexController extends \dej\mvc\Controller
 
         //return App::View('index', ["message" => "Welcome To dejframework!"]);
 
-        $result = App::Query()->deleteFrom('users')->where('username', '=', 'someone')->do();
+        $users = User::count()->where('city', '=', 'Sari')->getInt();
 
-
-        var_dump($result);
+        var_dump($users);
 
     }
 

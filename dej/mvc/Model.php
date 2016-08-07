@@ -10,6 +10,7 @@ class Model
 {
 	public $id;
 	protected static $dbTable;
+	protected static $primaryKey = [];
 	protected static $dbFields = [];
 	protected static $modelName;
     protected static $validationRules = [];
@@ -36,13 +37,18 @@ class Model
 			$updateData[$field] = $this->$property;
 		}
 
-		return App::Query()->update(static::$dbTable)->set($updateData)->where('id', '=', $this->id)->do();
+		$pKeyField = array_keys(static::$primaryKey)[0];
+		$pKeyProp = static::$primaryKey[$pKeyField];
+
+		return App::Query()->update(static::$dbTable)->set($updateData)->where($pKeyField, '=', $this->$pKeyProp)->do();
 
 	}
 
 	public function delete()
 	{
-		return App::Query()->deleteFrom(static::$dbTable)->where('id', '=', $this->id)->do();
+        $pKeyField = array_keys(static::$primaryKey)[0];
+        $pKeyProp = static::$primaryKey[$pKeyField];
+		return App::Query()->deleteFrom(static::$dbTable)->where($pKeyField, '=', $this->$pKeyProp)->do();
 	}
 
 

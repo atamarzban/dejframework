@@ -160,13 +160,16 @@ $result = App::Connection()->executeQuery("SELECT * FROM some_table WHERE some_f
 $result = App::Connection()->executeQuery("SELECT * FROM some_table WHERE some_field = ? AND another_field = ?", [$some_value, "another_value"]);
 
 //A Query using prepared statements, To protect against SQL Injection. With Named Parameters.
-$result = App::Connection()->executeQuery("SELECT * FROM some_table WHERE some_field = :some_value_name AND another_field = :another_value_name", [":some_value_name" => $some_value,
-"another_value_name" => "another_value"]);
-```
-You can do this anywhere, provided that you have added ```php use \dej\App; ```.
+$result = App::Connection()->executeQuery("SELECT * FROM some_table WHERE some_field = :some_value_name
+                                                                    AND another_field = :another_value_name",
 
--**Layer 2 - Query Builder:**
-This class builds queries and uses the Connection class to run them using secure prepared statements. It should be instantiated for each new query, this is done for you by /dej/App automatically each time you type ```php App::Query() ```, just like we saw in the Service Povider section example. You can build queries with it using method chaining. Take a look at the examples below:
+                                                                    [":some_value_name" => $some_value,
+                                                                     "another_value_name" => "another_value"]);
+```
+You can do this anywhere, provided that you have added ``` use \dej\App; ```.
+
+**Layer 2 - Query Builder:**
+This class builds queries and uses the Connection class to run them using secure prepared statements. It should be instantiated for each new query, this is done for you by /dej/App automatically each time you type ``` App::Query() ```, just like we saw in the Service Povider section example. You can build queries with it using method chaining. Take a look at the examples below:
 ```php
 $result = App::Query()->select()->from('users')->getAll();
 
@@ -176,7 +179,7 @@ $result = App::Query()->select()->from('users')->getJson();
 
 $query = App::Query()->select()->from('users')->getQuery();
 ```
-As you can see, using the dej Query Builder is simple, use call App::Query() and it automatically passes a new, dependency injected Query class to you, and then you chain methods on it to add conditions of your liking to it, such as select(), from() and so on, then finally, you use one of the get methods to fetch either the top result (```php getOne() ```), All results (```php getAll() ```), All results as JSON (```php getJson() ```), Or the constructed query (```php getQuery() ```). The results are fetched in stdClass format that you can use easily. It's worth noting that without using one of the get methods at the end of you query, the results won't be fetched. Also, you can chain methods on multiple lines and in multiple steps, for example, to change it by some condition:
+As you can see, using the dej Query Builder is simple, use call App::Query() and it automatically passes a new, dependency injected Query class to you, and then you chain methods on it to add conditions of your liking to it, such as select(), from() and so on, then finally, you use one of the get methods to fetch either the top result (``` getOne() ```), All results (``` getAll() ```), All results as JSON (``` getJson() ```), Or the constructed query (``` getQuery() ```). The results are fetched in stdClass format that you can use easily. It's worth noting that without using one of the get methods at the end of you query, the results won't be fetched. Also, you can chain methods on multiple lines and in multiple steps, for example, to change it by some condition:
 ```php
 $query = App::Query()->select();
 
@@ -218,6 +221,115 @@ $affectedRows = App::Query()->deleteFrom('users')->where('username', '=', 'someo
 ```
 **Note That** DELETE or UPDATE Queries can result in loss of data if there's no WHERE clause provided, as a security measure, dejframework will throw an exception if it encounters such a situation. Please run such queries using the Connection class manually.
 
+**Layer 3 - Object-Relational Mapping:** ORM will be discussed in the next section.
 
+# Object-Relational Mapping
+According to Wikipedia:
+>Object-relational mapping (ORM) ... is a programming technique for converting data between incompatible type systems in >object-oriented programming languages. This creates, in effect, a "virtual object database" that can be used from within the >programming language.
+Since dejframework works in an MVC Architecture, Data persistence is contained in the Model component of MVC. Models relate to the entities in your application, such as a User, a Purchase, a Product, etc. in a shopping system. They need to be saved and retrieved to and from the database. Relational databases work in the SQL language, and dejframeworkm like most frameworks operates in an Object-Oriented environment. And SQL code in the middle of PHP code is considered not to be best-practice. Thus, dejframework tries to seperate you from SQL code in 3 levels, 2 of them were elaborated in the previous section, now we will see how to work with Models:
+1. Create your Model in **/dej/app/models**. Be sure to follow the PSR-0 namespacing conventions. an example is set up for you, named **User.php**, Also, Create the corresponding table and fields in the Database.
+2. Add the properties that your model has. (According to your design: for example username, password and city for User)
+3. For the Model to know which database table it corresponds to, set it as a class property, Also set the primary key:
+```php
+class User extends \dej\mvc\Model
+{
+	protected static $dbTable = "users";
 
+	//Format: ["db_field_name" => "modelPropertyName"]
+	protected static $primaryKey = ["id" => "id"];
+
+  //Model properties
+	public $username;
+	public $password;
+	public $city;
+	.
+	.
+	.
+```
+3. For the Model to know which of it's properties correspond to which Database table columns, set it as a class property, Ideally, their names should be the same.
+```php
+class User extends \dej\mvc\Model
+{
+	protected static $dbTable = "users";
+
+	//Format: ["db_field_name" => "modelPropertyName"]
+	protected static $dbFields = ["username" => "username",
+		                            "password" => "password",
+		                            "city" => "city",
+	                            	"id" => "id"];
+
+	public $username;
+	public $password;
+	public $city;
+	.
+	.
+	.
+```
+**Note That** The ``` id ``` property is defined in the ```/dej/mvc/Model``` class that your models extend. Thus, if you want your Model to have an id, there's no need to define it again.
+4. In Order for the model to know it's own name, set it as a class property:
+```php
+class User extends \dej\mvc\Model
+{
+	protected static $dbTable = "users";
+	protected static $dbFields = ["username" => "username",
+		                            "password" => "password",
+		                            "city" => "city",
+	                            	"id" => "id"];
+	//Exactly the same as the class name
+	protected static $modelName = "User";
+
+	public $username;
+	public $password;
+	public $city;
+	.
+	.
+	.
+```
+
+**That's it for now,** provided that you have set these configurations correctly, you will be able to use the ORM methods on your Models. Take a look at the examples below:
+```php
+//Creating a new record
+use \app\models\User;
+
+$user = new User();
+$user->username = "jameshetfield";
+$user->password = "13831383";
+$user->city = "Downey";
+$user->create();  //Saved into the database.
+```
+The ORM uses the dej Query builder underneath, to generate necessary queries.
+**Note That** create(), update(), and delete() return affected rows which you can check to see if the operation was successful.
+```php
+//Finding a record by a field named 'id'
+$user = User::findById(11);
+
+//changing it's properties
+$user->password = "through_the_never";
+$user->update();  //Updated in the database.
+
+//deleting it.
+$user->delete();
+```
+**Note That** These functions work with the primary key of records.
+```php
+//Finding records by some condition.
+$users = User::find()->where('city', '=', 'Sari')->getAll(); //Returns an array of User objects.
+
+//A more complex one
+$users = User::find()->where('city', '=', 'Sari')->andWhere('age', '>', 20)->orderBy('age', 'ASC')
+                                                                            ->limit(25)
+                                                                            ->offset(100)->getAll();
+                                                                            //Don't forget the get*() method!
+//Retrieveing all records
+$users = User::getAll();  //doesn't need a getAll() at the end because it knows what to do.
+
+//The method for deleting by condition is named 'wipe'
+$users = User::wipe()->where('status', '=', 'banned')->orWhere('email_confirmation', '=', '0');
+
+//counting all records
+$userCount = User::countAll();
+
+//counting records that have a certain condition
+$userCount = User::count()->where('city', '=', 'Sari')->getInt(); //getInt() returns the count of the results as an Integer.
+```
 //TODO Complete Documentation

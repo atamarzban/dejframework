@@ -9,7 +9,7 @@ class User extends \dej\mvc\Model
 {
 	//TODO Optional Auth
 	protected static $dbTable = "users";
-
+    protected static $primaryKey = ["id" => "id"];
 	protected static $dbFields = ["username" => "username",
 		"password" => "password",
 		"city" => "city",
