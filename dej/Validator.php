@@ -15,10 +15,10 @@ class Validator extends \dej\common\Singleton
     }
 
 
-    public function validate($input = null, $rules = null)
+    public function validate($input = [], $rules = null)
     {
-        if ($input == null || $rules == null) throw new \Exception("input or rules cannot be empty in validate() method");
-
+        if ($rules == null) throw new \Exception("rules cannot be empty in validate() method");
+        if ($input == null) $input = [];
         //determine input type
         if(is_object($input))
         {

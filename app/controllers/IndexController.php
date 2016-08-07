@@ -16,10 +16,10 @@ class IndexController extends \dej\mvc\Controller
     {
 
         //return App::View('index', ["message" => "Welcome To dejframework!"]);
+       $errors = App::Request()->validate(['email' => 'required|string|email',
+                                    'password' => 'required|string|min:10|max:100']);
 
-        $users = User::count()->where('city', '=', 'Sari')->getInt();
-
-        var_dump($users);
+        var_dump($errors);
 
     }
 

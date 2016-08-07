@@ -336,4 +336,93 @@ $userCount = User::countAll();
 //counting records that have a certain condition
 $userCount = User::count()->where('city', '=', 'Sari')->getInt(); //getInt() returns the count of the results as an Integer.
 ```
+
+# Data Validation
+Data Validation in dejframework is handled by The ```\dej\Validator``` Class. You can use it in various ways:
+1. **Standalone:** You can use the validation service anywhere in your application with ```App::Validator()``` which gives you the singleton instance of it. It accepts 2 parameters:
+	- A **Value** to be validated. (String, Int, Array, Object)
+	- A set of **Rules** to validate the data against.
+Let's see how it works:
+```php
+use \dej\App;
+
+//Validate a single value according to a set of rules seperated by "|".
+$result = App::Validator()->validate("This is going to be validated", "required|string|min:5|max:30");
+
+//Validate an object or and array:
+$result = App::Validator()->validate($user, ['username' => 'required|string|email|min:5|max:30',
+						'password' => 'required|string|min:10|max:100'],
+						'age' => 'int|min:18|max:99');
+```
+The ```validate()``` method returns an array. If there are no validation errors and the data is valid, it will be an empty array. so you can check if the data is valid with ```empty()```. If there are any validation errors, you will see them in the array.
+```php
+//The rules have changed
+$errors = App::Validator()->validate("This is going to be validated", "required|string|email|min:5|max:10");
+var_dump($errors);
+```
+This is what the above code will output:
+```
+array
+  0 => 'This Field should be an email'
+  1 => 'This Field should be less than 10'
+```
+Now with an object:
+```php
+$errors = App::Validator()->validate($obj, ['email' => 'required|string|email',
+                                            'password' => 'required|string',
+                                            'age' => 'int']);
+var_dump($errors);
+```
+Output:
+```
+array (size=3)
+  'email' =>
+    array (size=1)
+      0 => string 'This Field should be an email'
+  'password' =>
+    array (size=2)
+      0 => string 'This Field is Required'
+      1 => string 'This Field should be more than 10'
+  'age' =>
+    array (size=1)
+      0 => string 'This Field should be a number'
+```
+As you can see, if you pass an object or array to the validator, it will return the errors related to each field in an associative array where the keys are field names and the values are arrays containing errors related to that field.
+2. **On the Request object:** You can validate request parameters (GET & POST Parameters) using the ```validate()``` method on The Request object.
+```php
+$errors = App::Request()->validate(['email' => 'required|string|email',
+                                    'password' => 'required|string|min:10|max:100']);
+var_dump($errors);
+```
+Visiting ```oyoursite.local/?email=notanemail&password=123``` will result in:
+```
+array (size=2)
+  'email' =>
+    array (size=1)
+      0 => string 'This Field should be an email'
+  'password' =>
+    array (size=1)
+      0 => string 'This Field should be more than 10'
+```
+2. **On Models:** You can validate models by setting the validation rules in their class definition. for example, see the User model included in ```/app/models/User.php```:
+```php
+class User extends \dej\mvc\Model
+{
+.
+.
+.
+protected static $validationRules = ["username" => "required|string|min:5|max:20",
+					"password" =>"required|string|min:5|max:255",
+					"city" => "string|max:10"];
+.
+.
+.
+}
+```
+Now you can validate instances of the models:
+```php
+$user = User::getById(11);
+$errors = $user->validate(); //returns errors in array like the previous examples.
+$isValid = $user->isValid(); //returns true or false
+```
 //TODO Complete Documentation
