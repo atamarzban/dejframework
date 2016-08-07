@@ -339,6 +339,7 @@ $userCount = User::count()->where('city', '=', 'Sari')->getInt(); //getInt() ret
 
 # Data Validation
 Data Validation in dejframework is handled by The ```\dej\Validator``` Class. You can use it in various ways:
+
 1. **Standalone:** You can use the validation service anywhere in your application with ```App::Validator()``` which gives you the singleton instance of it. It accepts 2 parameters:
 	- A **Value** to be validated. (String, Int, Array, Object)
 	- A set of **Rules** to validate the data against.
@@ -388,6 +389,7 @@ array (size=3)
       0 => string 'This Field should be a number'
 ```
 As you can see, if you pass an object or array to the validator, it will return the errors related to each field in an associative array where the keys are field names and the values are arrays containing errors related to that field.
+
 2. **On the Request object:** You can validate request parameters (GET & POST Parameters) using the ```validate()``` method on The Request object.
 ```php
 $errors = App::Request()->validate(['email' => 'required|string|email',
@@ -404,7 +406,8 @@ array (size=2)
     array (size=1)
       0 => string 'This Field should be more than 10'
 ```
-2. **On Models:** You can validate models by setting the validation rules in their class definition. for example, see the User model included in ```/app/models/User.php```:
+
+3. **On Models:** You can validate models by setting the validation rules in their class definition. for example, see the User model included in ```/app/models/User.php```:
 ```php
 class User extends \dej\mvc\Model
 {
