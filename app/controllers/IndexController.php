@@ -14,13 +14,7 @@ class IndexController extends \dej\mvc\Controller
 
     public static function index()
     {
-
-        //return App::View('index', ["message" => "Welcome To dejframework!"]);
-       $errors = App::Request()->validate(['email' => 'required|string|email',
-                                    'password' => 'required|string|min:10|max:100']);
-
-        var_dump($errors);
-
+        return App::View('index', ['message' => 'Welcome to dejframework!']);
     }
 
 }

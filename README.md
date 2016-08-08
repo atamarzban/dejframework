@@ -140,6 +140,32 @@ return App::Query()->select()->from('some_table');
 ```
 That's it! Take a look at **dej/App.php** to see how it works. An static method named 'Query' is called on the App class. It instantiates the Query class and passes a connection instance as the constructor parameters to it. Piece of cake!
 
+#Request
+The ```\dej\http\Request``` class makes interacting with the request easy, take a a look at the following examples:
+```php
+//check if request is ajax or not
+$result = App::Request()->isAjax();
+
+//returns $_GET['name'];
+$result = App::Request()->get('name');
+
+//returns $_POST['name'];
+$result = App::Request()->post('name');
+
+//returns $_REQUEST;
+$result = App::Request()->all();
+```
+#Response
+The ```\dej\http\Response``` class makes setting response parameters easy, you should return a response in your controller if you want to set HTTP response codes or headers, take a a look at the following examples:
+```php
+class IndexController extends \dej\mvc\Controller
+{
+    public static function index()
+    {
+        return App::Response()->code(404)->header('HTTP/1.1 404 Not Found');
+    }
+}
+```
 # Database
 **Configuration:** First enter the database configuration in **/config.json**.
 dejframework deals with databases in a 3-Layer Architecture:
@@ -431,4 +457,100 @@ $user = User::getById(11);
 $errors = $user->validate(); //returns errors in array like the previous examples.
 $isValid = $user->isValid(); //returns true or false
 ```
-//TODO Complete Documentation
+# Views
+To present your data to the user, you need a user interface. in the web, most of the time this means HTML markup. In MVC, the logic must be seperated from the UI, so you put your HTML in views and only include presentation logic in them, such as ```echo```ing a value or putting an array into a ```foreach`` to iterate over it. To create a view you should:
+
+1. Create your view file in ```/app/views```. There's one view included by default: ```index.phtml```
+2. Design and write the HTML that you need in the view:
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title><?= $data->user->username ?>'s profile</title>
+</head>
+<body>
+
+<h2>View <?= $data->user->username ?>'s Profile</h2>
+
+<p>Username: <?= $data->user->username ?></p>
+
+<p>Password: <?= $data->user->password ?></p>
+
+<p>City: <?= $data->user->city ?></p>
+
+</body>
+</html>
+```
+3. Call the view in the controller and pass data to it:
+```php
+class IndexController extends \dej\mvc\Controller
+{
+    public static function index()
+    {
+        $user = User::find()->where('username', '=', 'jameshetfield')->getOne();
+        return App::View('user', ['user' => $user]); //the first argument is the view name,
+        						the second one is the data you want to pass to
+        						the view, in this example, a variable called 'user'
+        						will be available in the user.phtml view
+        						which contains the instance of user we fetched.
+        						Piece of cake!
+    }
+}
+```
+The framework will render the view to output and the result will be:
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>jameshetfield's profile</title>
+</head>
+<body>
+
+<h2>View jameshetfield's Profile</h2>
+
+<p>Username: jameshetfield</p>
+
+<p>Password: 13831383</p>
+
+<p>City: Downey</p>
+
+</body>
+</html>
+```
+Now let's see another example, what if we want to create a table of all users? edit your view:
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>All Users</title>
+</head>
+<body>
+<table>
+    <tr>
+        <th>username</th>
+        <th>password</th>
+        <th>city</th>
+    </tr>
+    <?php foreach ($data->users as $user): ?>
+        <tr>
+            <th><?= $user->username ?></th>
+            <th><?= $user->password ?></th>
+            <th><?= $user->city ?></th>
+        </tr>
+    <?php endforeach; ?>
+</table>
+</body>
+</html>
+```
+And then your controller:
+```php
+class IndexController extends \dej\mvc\Controller
+{
+    public static function index()
+    {
+        $users = User::getAll();
+        return App::View('user', ['users' => $users]);
+    }
+}
+```
+And see the result for yourself!
