@@ -34,6 +34,7 @@ dejframework is a simple and minimal PHP MVC framework focused on conciseness, s
 
 # Routing
 For the framework to know what to do when a request comes, you should set routes for your applications in /app/routes.php. It is done easily.
+
 A Route consists of an **HTTP Method, URL, and the destination that should execute if a request is made with the specified method to the specified URL.** Nothing is executed without setting routes. You can pass a closure as the destination:
 
 ```php
@@ -228,6 +229,7 @@ According to Wikipedia:
 >Object-relational mapping (ORM) ... is a programming technique for converting data between incompatible type systems in object-oriented programming languages. This creates, in effect, a "virtual object database" that can be used from within the programming language.
 
 Since dejframework works in an MVC Architecture, Data persistence is contained in the Model component of MVC. Models relate to the entities in your application, such as a User, a Purchase, a Product, etc. in a shopping system. They need to be saved and retrieved to and from the database. Relational databases work in the SQL language, and dejframework, like most frameworks operates in an Object-Oriented environment. And SQL code in the middle of PHP code is considered not to be best-practice. Thus, dejframework tries to seperate you from SQL code in 3 levels, 2 of them were elaborated in the previous section, now we will see how to work with Models:
+
 1. Create your Model in **/dej/app/models**. Be sure to follow the PSR-0 namespacing conventions. an example is set up for you, named **User.php**, Also, Create the corresponding table and fields in the Database.
 2. Add the properties that your model has. (According to your design: for example username, password and city for User)
 3. For the Model to know which database table it corresponds to, set it as a class property, Also set the primary key:
@@ -269,7 +271,8 @@ class User extends \dej\mvc\Model
 	}
 ```
 **Note That** The ``` id ``` property is defined in the ```/dej/mvc/Model``` class that your models extend. Thus, if you want your Model to have an id, there's no need to define it again.
-4. In Order for the model to know it's own name, set it as a class property:
+
+4. For the model to know it's own name, set it as a class property:
 ```php
 class User extends \dej\mvc\Model
 {
@@ -302,6 +305,7 @@ $user->city = "Downey";
 $user->create();  //Saved into the database.
 ```
 The ORM uses the dej Query builder underneath, to generate necessary queries.
+
 **Note That** create(), update(), and delete() return affected rows which you can check to see if the operation was successful.
 ```php
 //Finding a record by a field named 'id'
@@ -341,6 +345,7 @@ $userCount = User::count()->where('city', '=', 'Sari')->getInt(); //getInt() ret
 Data Validation in dejframework is handled by The ```\dej\Validator``` Class. You can use it in various ways:
 
 1. **Standalone:** You can use the validation service anywhere in your application with ```App::Validator()``` which gives you the singleton instance of it. It accepts 2 parameters: A **Value** to be validated. (String, Int, Array, Object) and a set of **Rules** to validate the data against.
+
 Let's see how it works:
 ```php
 use \dej\App;
