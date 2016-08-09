@@ -28,7 +28,7 @@ class Session extends \dej\common\Singleton
     public function get($key = null)
     {
         if (empty($key)) return false;
-        $this->getHandler($key);
+        return $this->getHandler($key);
     }
 
     private function getHandler($key)
