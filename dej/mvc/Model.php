@@ -56,9 +56,10 @@ class Model
 	* Static Methods.
 	*/
 
-	public static function findById($id = null)
+	public static function findByPKey($pKey = null)
 	{
-		return App::Query(static::$modelName)->select()->from(static::$dbTable)->where('id', '=', $id)->getOne();
+		$pKeyField = array_keys(static::$primaryKey)[0];
+		return App::Query(static::$modelName)->select()->from(static::$dbTable)->where($pKeyField, '=', $pKey)->getOne();
 	}
 
 	public static function find()

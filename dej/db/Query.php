@@ -370,12 +370,12 @@ private function buildCountQuery()
 		$result = $this->connection->executeQuery($this->query, $this->data, false);
 		if ($this->getType == "stdClass") {
 			return $result;
-		} else {
+		} else if (!empty($result)){
 			$className = "\app\models\\" . $this->getType;
 			$model = new $className();
 			$model->castToThis($result);
 			return $model;
-		}
+		} else return false;
 	}
 
 	public function getAll()
@@ -384,7 +384,7 @@ private function buildCountQuery()
 		$results = $this->connection->executeQuery($this->query, $this->data);
 		if ($this->getType == "stdClass") {
 			return $results;
-		} else {
+		} else if (!empty($result)){
 			$className = "\app\models\\" . $this->getType;
 			$resultsModels = [];
 			foreach ($results as $result) {
@@ -393,7 +393,7 @@ private function buildCountQuery()
 				array_push($resultsModels, $model);
 			}
 			return $resultsModels;
-		}
+		} else return [];
 	}
 
 	public function getInt()

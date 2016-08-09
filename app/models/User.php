@@ -7,6 +7,8 @@ namespace app\models;
  */
 class User extends \dej\mvc\Model
 {
+	use \dej\traits\IsStateful;
+
 	//TODO Optional Auth
 	protected static $dbTable = "users";
     protected static $primaryKey = ["id" => "id"];
@@ -29,6 +31,16 @@ class User extends \dej\mvc\Model
 	{
 
 	}
+
+    public function login()
+    {
+        $this->remember('logged_in_user');
+    }
+    
+    public function logout()
+    {
+        $this->forget('logged_in_user');
+    }
 }
 
 ?>

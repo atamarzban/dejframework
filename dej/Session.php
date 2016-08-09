@@ -66,4 +66,16 @@ class Session extends \dej\common\Singleton
     {
         return session_destroy();
     }
+
+    public function delete($key = null)
+    {
+        if (empty($key)) return false;
+        $this->deleteHandler($key);
+    }
+
+    private function deleteHandler($key = null)
+    {
+        if (empty($key)) return false;
+        unset($_SESSION[$key]);
+    }
 }
