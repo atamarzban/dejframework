@@ -54,6 +54,11 @@ class App
         return new \dej\db\Query(\dej\db\Connection::getInstance(), $getType);
     }
 
+    public static function Session()
+    {
+        return \dej\Session::getInstance();
+    }
+
 }
 
 ?>
