@@ -8,6 +8,8 @@
   "db_username" : "DB Username here",
   "db_password" : "DB password here",
 
-  "uri_prefix" : ""
+  "uri_prefix" : "",
+
+  "default_auth_model" : "\\app\\models\\User"
 
 }
