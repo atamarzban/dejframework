@@ -12,6 +12,14 @@ use \dej\App;
 
 Route::set("GET", "/", "IndexController@index");
 
+Route::set("POST", "/register", "IndexController@register");
+
+Route::set("POST", "/login", "IndexController@login");
+
+Route::set('GET', '/logout', 'IndexController@logout');
+
+Route::set('GET', '/dashboard', 'IndexController@dashboard');
+
 
 
 //if no routes caught, give a 404 response.

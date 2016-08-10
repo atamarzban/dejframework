@@ -15,9 +15,15 @@ class Model
 	protected static $modelName;
     protected static $validationRules = [];
 
-    function __construct()
+    function __construct($data = null)
 	{
-
+		if ($data != null)
+		{
+			foreach ($data as $property => $value)
+            {
+                $this->$property = $value;
+            }
+		}
 	}
 
 	public function create()

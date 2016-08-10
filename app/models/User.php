@@ -21,12 +21,12 @@ class User extends \dej\mvc\Model
 	protected static $modelName = "User";
 
 	protected static $validationRules = ["username" => "required|string|min:5|max:20",
-										"password" => "required|string|min:5|max:255"];
+										"password" => "required"];
 
 	protected static $rememberKey = 'logged_in_user';
 
 	public $username;
-	protected $password;
+	public $password;
 
     public function setPassword($password = null)
     {
@@ -63,7 +63,7 @@ class User extends \dej\mvc\Model
         return self::retrieve(self::$rememberKey);
     }
     
-    public function logout()
+    public static function logout()
     {
         self::forget(static::$rememberKey);
     }

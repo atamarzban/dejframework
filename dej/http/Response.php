@@ -1,6 +1,7 @@
 <?php
 
 namespace dej\http;
+use \dej\App;
 
 class Response
 {
@@ -35,6 +36,18 @@ class Response
     public function body($body = null)
     {
         $this->body = (string) $body;
+        return $this;
+    }
+
+    public function redirect($location)
+    {
+        $this->header("Location: {$location}");
+        return $this;
+    }
+
+    public function withErrors($errors)
+    {
+        App::Session()->flash(['errors' => $errors]);
         return $this;
     }
 

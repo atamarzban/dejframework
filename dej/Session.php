@@ -5,9 +5,16 @@ namespace dej;
 
 class Session extends \dej\common\Singleton
 {
+    public $flash;
+
     public function __construct()
     {
         session_start();
+        if ($this->isSaved('dej_flash'))
+        {
+            $this->flash = $this->get('dej_flash');
+            $this->delete('dej_flash');
+        }
     }
 
     public function save($keyValues = [])
@@ -15,8 +22,9 @@ class Session extends \dej\common\Singleton
         if (empty($keyValues)) return false;
         foreach ($keyValues as $key => $value)
         {
-            $this->saveHandler($key, $value);
+            if (!$this->saveHandler($key, $value)) return false;
         }
+        return true;
     }
 
     private function saveHandler($key, $value)
@@ -85,4 +93,15 @@ class Session extends \dej\common\Singleton
         if($key == null) return false;
         return isset($_SESSION[$key]);
     }
+
+    public function flash($keyValues = [])
+    {
+        $this->save(['dej_flash' => $keyValues]);
+    }
+
+    public function getFlash($key)
+    {
+        return $this->flash[$key];
+    }
+
 }
