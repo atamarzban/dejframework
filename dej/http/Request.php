@@ -82,6 +82,13 @@ class Request extends \dej\common\Singleton
         return App::Validator()->validate($_REQUEST, $rules);
     }
 
+	public function user($model = null)
+	{
+		if ($model == null) $model = App::Config()->default_auth_model;
+        if (!$model::isLoggedIn()) return false;
+        return $model::getLoggedIn();
+	}
+
 }
 
 ?>

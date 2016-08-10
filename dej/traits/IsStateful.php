@@ -21,11 +21,11 @@ trait IsStateful
         $dataHash = $this->hashInstance();
         $dataPkey = $this->$pKeyProp;
 
-        App::Session()->save([
+        return App::Session()->save([
             "dej_obj_{$key}_pkey" => $dataPkey,
             "dej_obj_{$key}_datahash" => $dataHash
         ]);
-        return true;
+        
     }
 
     public static function retrieve($key, $checkChange = false)
@@ -56,18 +56,25 @@ trait IsStateful
         else return false;
     }
 
+    public static function isRemembered($key)
+    {
+        $issetPKey = App::Session()->isSaved("dej_obj_{$key}_pkey");
+        $issetDataHash = App::Session()->isSaved("dej_obj_{$key}_datahash");
+        return ($issetDataHash && $issetPKey);
+    }
+
     private function hashInstance()
     {
         return md5(json_encode($this));
     }
 
-    public function forget($key = null)
+    public static function forget($key = null)
     {
         if (empty($key)) return false;
-        $this->deleteFromSession($key);
+        self::deleteFromSession($key);
     }
 
-    private function deleteFromSession($key = null)
+    private static function deleteFromSession($key = null)
     {
         App::Session()->delete("dej_obj_{$key}_pkey");
         App::Session()->delete("dej_obj_{$key}_datahash");

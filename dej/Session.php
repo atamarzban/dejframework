@@ -23,6 +23,7 @@ class Session extends \dej\common\Singleton
     {
         if(empty($key)) return false;
         $_SESSION[$key] = $value;
+        return true;
     }
 
     public function get($key = null)
@@ -77,5 +78,11 @@ class Session extends \dej\common\Singleton
     {
         if (empty($key)) return false;
         unset($_SESSION[$key]);
+    }
+
+    public function isSaved($key = null)
+    {
+        if($key == null) return false;
+        return isset($_SESSION[$key]);
     }
 }

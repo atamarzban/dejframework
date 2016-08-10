@@ -406,7 +406,7 @@ private function buildCountQuery()
 		return json_encode($this->getAll(), JSON_PRETTY_PRINT);
 	}
 
-	public function do()
+	public function execute()
 	{
 		$this->buildQuery();
 		return $this->connection->executeNonQuery($this->query, $this->data);

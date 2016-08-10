@@ -27,7 +27,7 @@ class Model
 			$insertData[$field] = $this->$property;
 		}
 
-		return App::Query()->insertInto(static::$dbTable)->values($insertData)->do();
+		return App::Query()->insertInto(static::$dbTable)->values($insertData)->execute();
 	}
 
 	public function update()
@@ -40,7 +40,7 @@ class Model
 		$pKeyField = array_keys(static::$primaryKey)[0];
 		$pKeyProp = static::$primaryKey[$pKeyField];
 
-		return App::Query()->update(static::$dbTable)->set($updateData)->where($pKeyField, '=', $this->$pKeyProp)->do();
+		return App::Query()->update(static::$dbTable)->set($updateData)->where($pKeyField, '=', $this->$pKeyProp)->execute();
 
 	}
 
@@ -48,7 +48,7 @@ class Model
 	{
         $pKeyField = array_keys(static::$primaryKey)[0];
         $pKeyProp = static::$primaryKey[$pKeyField];
-		return App::Query()->deleteFrom(static::$dbTable)->where($pKeyField, '=', $this->$pKeyProp)->do();
+		return App::Query()->deleteFrom(static::$dbTable)->where($pKeyField, '=', $this->$pKeyProp)->execute();
 	}
 
 
