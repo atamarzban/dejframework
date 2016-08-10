@@ -25,7 +25,7 @@ dejframework is a simple and minimal PHP MVC framework focused on conciseness, s
 # Requirements
 - Apache2
 - Mod_Rewrite (.htaccess support)
-- PHP 7
+- PHP 5.6
 - MySQL
 
 #Installation
