@@ -1,10 +1,7 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8">
-    <title><?= $data->message ?></title>
-  </head>
-  <body>
+
+    <?php $this->paste('partials/header'); ?>
+
+
 
   	<h2><?= $data->message ?></h2>
 
@@ -31,6 +28,7 @@
         <br/>
         <input type="submit" value="Login"/>
     </form>
-  
-  </body>
-</html>
+
+    
+
+    <?php $this->paste('partials/footer') ?>

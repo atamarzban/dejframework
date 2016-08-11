@@ -26,6 +26,12 @@ class View
         $this->errors = array_merge($errors, $this->errors);
     }
 
+	public function paste($partialPath = null){
+        $data = (object) $this->data;
+        if($partialPath == null) return false;
+        include "app/views/{$partialPath}.phtml";
+    }
+
     private function errors($key)
     {
         if (isset($this->errors[$key])){
