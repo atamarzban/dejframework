@@ -83,11 +83,16 @@ class Query
 	public function where($field = null, $operator = null, $value = null)
 	{
 		if($field == null ||
-		   $operator == null ||
-		   $value == null) throw new \Exception("Provide Correct Parameters in where(field, operator, value)");
+		   $operator == null) throw new \Exception("Provide Correct Parameters in where(field, operator, value)");
 
+		if ($value == null)
+		{
+			$value = $operator;
+			$operator = '=';
+		}
+		
 		//make the where section of the query and push it into it's array.
-		array_push($this->where, "{$field} {$operator} :{$field}");
+		array_push($this->where, "`{$field}` {$operator} :{$field}");
 		//add the value in the data to be used in prepared statement.
 		$this->data["$field"] = $value;
 		return $this;
@@ -149,11 +154,11 @@ class Query
 			if(!empty($this->columns)) $query .= "`" . implode("`, `", $this->columns) . "` ";
 		}
 
-		if(!empty($this->table)) $query .= "FROM {$this->table} ";
+		if(!empty($this->table)) $query .= "FROM `{$this->table}` ";
 
 		if(!empty($this->where)) $query .= "WHERE " . implode(" ", $this->where);
 
-		if(!empty($this->orderBy)) $query .= " ORDER BY " . $this->orderBy;
+		if(!empty($this->orderBy)) $query .= " ORDER BY `" . $this->orderBy . "`";
 
 		if(!empty($this->limit)) $query .= " LIMIT " . $this->limit;
 
@@ -199,10 +204,10 @@ class Query
 	private function buildInsertQuery()
 	{
 		$query = "INSERT INTO ";
-		if(!empty($this->table)) $query .= " {$this->table} ";
+		if(!empty($this->table)) $query .= " `{$this->table}` ";
 		if (!empty($this->data) && !empty($this->columns)) {
-			$commaSeperatedColumns = implode(", ", $this->columns);
-			$query .= "({$commaSeperatedColumns}) ";
+			$commaSeperatedColumns = implode("`, `", $this->columns);
+			$query .= "(`{$commaSeperatedColumns}`) ";
 			$query .= "VALUES ";
 			$commaSeperatedParams = implode(", ", array_keys($this->data));
 			$query .= "({$commaSeperatedParams})";
@@ -247,12 +252,12 @@ class Query
 
 	private function buildUpdateQuery()
 	{
-		if(!empty($this->table)) $query = "UPDATE {$this->table} SET ";
+		if(!empty($this->table)) $query = "UPDATE `{$this->table}` SET ";
 
 		if (!empty($this->columns)) {
 			$setKeyValuePairs = array();
 			foreach ($this->columns as $column) {
-				array_push($setKeyValuePairs, "{$column} = :dejUpdate{$column}");
+				array_push($setKeyValuePairs, "`{$column}` = :dejUpdate{$column}");
 			}
 			$query .= implode(", ", $setKeyValuePairs);
 		}
@@ -292,7 +297,7 @@ class Query
 
 	private function buildDeleteQuery()
 	{
-		$query = "DELETE FROM {$this->table}";
+		$query = "DELETE FROM `{$this->table}`";
 		if (!empty($this->where)) {
 			$query .= " WHERE " . implode(" ", $this->where);
 		} else {
@@ -318,7 +323,7 @@ public function count($tablename = null)
 private function buildCountQuery()
 {
 
-	$query = "SELECT COUNT(*) AS count FROM {$this->table} ";
+	$query = "SELECT COUNT(*) AS count FROM `{$this->table}` ";
 	if(!empty($this->where)) $query .= "WHERE " . implode(" ", $this->where);
 	return $query;
 }
