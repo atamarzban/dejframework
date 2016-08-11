@@ -12,13 +12,17 @@ use \dej\App;
 
 Route::set("GET", "/", "IndexController@index");
 
-Route::set("POST", "/register", "IndexController@register");
+Route::set("GET", "/register", "AuthController@showRegisterForm");
 
-Route::set("POST", "/login", "IndexController@login");
+Route::set("POST", "/register", "AuthController@register");
 
-Route::set('GET', '/logout', 'IndexController@logout');
+Route::set("GET", "/login", "AuthController@showLoginForm");
 
-Route::set('GET', '/dashboard', 'IndexController@dashboard');
+Route::set("POST", "/login", "AuthController@login");
+
+Route::set('GET', '/logout', 'AuthController@logout');
+
+Route::set('GET', '/dashboard', 'HomeController@showDashboard');
 
 
 

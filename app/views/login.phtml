@@ -1,0 +1,15 @@
+
+<?php $this->paste('partials/header'); ?>
+
+<form action="/login" method="post">
+    <h3>Login:</h3>
+    <span style="color:red"><?= $this->errors('login') ?></span>
+    <br/>
+    <input type="text" name="username" placeholder="username"/>
+    <br/>
+    <input type="password" name="password" placeholder="password"/>
+    <br/>
+    <input type="submit" value="Login"/>
+</form>
+
+<?php $this->paste('partials/footer') ?>

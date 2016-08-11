@@ -3,31 +3,13 @@
 
 
 
-  	<h2><?= $data->message ?></h2>
+  	<h2>Welcome to dejframework</h2>
 
-    <form action="/register" method="post">
-        <h3>Register:</h3>
-        <span style="color:red"><?= $this->errors('register') ?></span>
-        <br/>
-        <input type="text" name="username" placeholder="username"/>
-        <span style="color:red"><?= $this->errors('username') ?></span>
-        <br/>
-        <input type="password" name="password" placeholder="password"/>
-        <span style="color:red"><?= $this->errors('password') ?></span>
-        <br/>
-        <input type="submit" value="Register"/>
-    </form>
+    <a href="/register">Register</a>
 
-    <form action="/login" method="post">
-        <h3>Login:</h3>
-        <span style="color:red"><?= $this->errors('login') ?></span>
-        <br/>
-        <input type="text" name="username" placeholder="username"/>
-        <br/>
-        <input type="password" name="password" placeholder="password"/>
-        <br/>
-        <input type="submit" value="Login"/>
-    </form>
+    <br/>
+
+    <a href="/login">Login</a>
 
     
 

@@ -21,6 +21,9 @@ dejframework is a simple and minimal PHP MVC framework focused on conciseness, s
 - Auto-Converting Objects to JSON makes REST API Implementation easy.
 - Validate Data on a Request, a Model or anything else easily with Validation Rules.
 - Multi-Language Validation errors with string formatting.
+- Storing model instances to session easily with stateful models.
+- Easily interact with the session with the Session object.
+- Flash 1-request-only messages to the session.
 
 # Requirements
 - Apache2
@@ -118,7 +121,7 @@ The specified action on the specified controller will be executed when the route
 Constantly Instantiating classes and passing dependencies to them can become a repetitive task in php development. The \dej\App Service provider aims to makes this process as DRY as possible. Using this service provider, you don't need to add **use** statements in each file and pass dependencies. Take This example:
 
 ```php
-/** 
+/**
 * Without a Service Provider
 * when you want to build a query
 */
@@ -168,6 +171,16 @@ class IndexController extends \dej\mvc\Controller
     }
 }
 ```
+You can redirect easily:
+```php
+//in the controller
+return App::Response()->redirect('/login');
+
+//redirect with errors
+App::Response()->redirect('/')->withErrors(['login' => 'login unsuccessful! maybe password is wrong.']);
+```
+Redirecting with errors flashes the errors to the session (discussed later).
+
 # Database
 **Configuration:** First enter the database configuration in **/config.json**.
 dejframework deals with databases in a 3-Layer Architecture:
@@ -223,6 +236,9 @@ Let's see other methods available on the query builder in the following examples
 //SELECT Queries:
 $result = App::Query()->select()->from('users')->where('id', '=', '22')->getAll();
 
+//you can omit the operator and it uses '=' by default
+$result = App::Query()->select()->from('users')->where('id', '22')->getAll();
+
 $result = App::Query()->select()->from('users')->where('city', '=', 'Berlin')
                                                 ->andWhere('age', '>', '20')->getAll();
 
@@ -236,17 +252,17 @@ $result = App::Query()->select()->from('users')->orderBy('age', 'DESC')
 //INSERT Query:
 $affectedRows = App::Query()->insertInto('users')->values(["username" => "jameshetfield",
                                                       "password" => "19831983",
-                                                      "city" => "Downey"])->do();
+                                                      "city" => "Downey"])->execute();
 ```
-**Note That** Queries that don't return results, must be executed with ```php do() ``` and it will automatically return the number of affected rows.
+**Note That** Queries that don't return results, must be executed with ```php execute() ``` and it will automatically return the number of affected rows.
 ```php
 //UPDATE Query:
 $affectedRows = App::Query()->update('users')->set(["age" => 53,
                                                     "band" => "Metallica"])
-                                                ->where('username', '=', 'jameshetfield')->do();
+                                                ->where('username', '=', 'jameshetfield')->execute();
 
 //DELETE Query:
-$affectedRows = App::Query()->deleteFrom('users')->where('username', '=', 'someone')->do();
+$affectedRows = App::Query()->deleteFrom('users')->where('username', '=', 'someone')->execute();
 ```
 **Note That** DELETE or UPDATE Queries can result in loss of data if there's no WHERE clause provided, as a security measure, dejframework will throw an exception if it encounters such a situation. Please run such queries using the Connection class manually.
 
@@ -331,6 +347,14 @@ $user->username = "jameshetfield";
 $user->password = "13831383";
 $user->city = "Downey";
 $user->create();  //Saved into the database.
+
+//or you can set the properties in the constructor
+$user = new User([
+		'username' => 'jameshetfield',
+		'password' => '13831383',
+		'city' => 'Downey'
+	]);
+$user->create();
 ```
 The ORM uses the dej Query builder underneath, to generate necessary queries.
 
@@ -360,7 +384,7 @@ $users = User::find()->where('city', '=', 'Sari')->andWhere('age', '>', 20)->ord
 $users = User::getAll();  //doesn't need a getAll() at the end because it knows what to do.
 
 //The method for deleting by condition is named 'wipe'
-$users = User::wipe()->where('status', '=', 'banned')->orWhere('email_confirmation', '=', '0');
+$users = User::wipe()->where('status', '=', 'banned')->orWhere('email_confirmation', '=', '0')->execute();
 
 //counting all records
 $userCount = User::countAll();
@@ -427,7 +451,7 @@ $errors = App::Request()->validate(['email' => 'required|string|email',
                                     'password' => 'required|string|min:10|max:100']);
 var_dump($errors);
 ```
-Visiting ```oyoursite.local/?email=notanemail&password=123``` will result in:
+Visiting ```yoursite.local/?email=notanemail&password=123``` will result in:
 ```
 array (size=2)
   'email' =>
@@ -458,6 +482,107 @@ Now you can validate instances of the models:
 $user = User::getById(11);
 $errors = $user->validate(); //returns errors in array like the previous examples.
 $isValid = $user->isValid(); //returns true or false
+```
+When you have your errors, you can pass it to the view to display, or redirect to somewhere with them:
+```php
+//in the controller
+$errors = $user->validate();
+if (!empty($errors)) return App::Response()->redirect('/')->withErrors($errors);
+```
+# Validation Messages
+The validation messages you saw in the previous examples were default messages, what if you want to change them, or, have validation messages in you own language? Take a look at ```/app/locale/en/validation/messages.php```:
+```php
+return [
+
+    "required" => "This Field is Required",
+    "string" => "This Field should be an string",
+    "int" => "This Field should be a number",
+    "min" => "This Field should be more than %s",
+    "max" => "This Field should be less than %s",
+    "email" => "This Field should be an email",
+
+];
+```
+You can see that the key's correspond to the validation type, and the values are validation messages. Variables are included in the messages with 's'. In ```/app/locale```, you can create your own directory for the language of you choice and in that directory, have your own validation messages with variables.
+
+You can set the default locale in ```/config.json```.
+
+You can change it in your app by ```App::Config()->locale = 'your_locale'; ```
+
+# Session
+In order to work with the PHP session, dejframework provides the ```\dej\Session``` class. Here are some examples on how to use it:
+```php
+//to set session variables
+App::Session()->save([
+			'key1' => 'value1',
+			'key2' => 'value2'
+		]);
+
+//to get session variables
+$value1 = App::Session()->get('key1');
+
+//to regenerate session id
+App::session()->regenerateId();
+
+//get all session variables as associative array
+$wholeSession = App::session()->all();
+
+//destroy the session
+App::session()->destroy();
+
+//delete a variable
+App::session()->delete('key1');
+
+//see if variable is set
+$trueOrFalse = App::session()->isSaved('key1');
+```
+
+# Flashing to The Session
+if you want a session variable to be available only in the next request, for example, a certain error message, you can flash it to the session like this:
+```php
+App::session()->flash(['message' => 'Registered Successfully!']);
+
+```
+And retrieve it in the next request:
+```php
+$message = App::session()->getFlash('message');
+```
+Note that flash messages are only available in the next request and only with ```->getFlash()```.
+
+# Stateful Models
+Sometimes you may want your application to remember an instance of a model for the next requests. For example, you want you app to remember the user that is logged in, or the shopping cart your user has, or anything else. If you store the primary key of the model that you want in the session and run a query to retrieve it in every request, it might get tedious.
+dejframework solves this by providing you with a trait that you can use in your models. Take a look:
+```php
+class ShoppingCart extends \dej\mvc\Model
+{
+	use \dej\traits\IsStateful;
+.
+.
+.
+}
+```
+Now you have a couple of more methods available in your model:
+```php
+//suppose you want to create a shopping cart for a guest user and add a product to it:
+$cart = new ShoppingCart();
+$cart->addProduct(2389);
+$cart->create(); //stored in the db
+
+//if you want to save it to the session get it easily in the next request
+$cart->remember('guest_shopping_cart'); //provide a key to remember it by this key.
+```
+Now in the next request:
+```php
+if (ShoppingCart::isRemembered('guest_shopping_cart'))	//see if theres any cart in the session
+	$cart = ShoppingCart::retrieve('users_shopping_cart'); //get's fresh data from the db
+
+if(ShoppingCart::hasChanged('guest_shopping_cart'))
+{
+	//checks if the cart in the database has changed **since you saved the cart in the session**.
+	doSomeThing();
+}
+
+ShoppingCart::forget('guest_shopping_cart'); //forgets the cart.
 ```
 # Views
 To present your data to the user, you need a user interface. in the web, most of the time this means HTML markup. In MVC, the logic must be seperated from the UI, so you put your HTML in views and only include presentation logic in them, such as ```echo```ing a value or putting an array into a ```foreach`` to iterate over it. To create a view you should:
@@ -499,6 +624,11 @@ class IndexController extends \dej\mvc\Controller
     }
 }
 ```
+You can provide error messages too:
+```php
+//in the controller
+return App::View('user')->withErrors(['authorization' => 'You are not allowed to view this user.']);
+```
 The framework will render the view to output and the result will be:
 ```html
 <!DOCTYPE html>
@@ -507,6 +637,9 @@ The framework will render the view to output and the result will be:
     <title>jameshetfield's profile</title>
 </head>
 <body>
+
+<!-- access the errors like this: -->
+<span class="error"> <?= $this->errors('authorization') ?> </span>
 
 <h2>View jameshetfield's Profile</h2>
 
@@ -556,3 +689,47 @@ class IndexController extends \dej\mvc\Controller
 }
 ```
 And see the result for yourself!
+
+You can create view partials and paste (include) them in other views:
+
+```html
+[/app/views/partials/header.phtml]
+<!--begin header-->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title><?= $data->title ?></title>
+</head>
+<body>
+
+<!--end header-->
+```
+and paste it in ```index.phtml```:
+```html
+[/app/views/index.phtml]
+
+<?php $this->paste('partials/header'); ?>
+
+  	<h2><?= $data->message ?></h2>
+ .
+ .
+ .
+ </html>
+```
+# Authentication
+Authentication is an application-related matter. It can be very diffrent in every application, so dejframework does not implement it in the framework itself, instead, you are provided with the basic user model, auth routes and controller logic that makes authentication happen and you are free to change it, or implement your own solution, the solution that is implemented in the framework uses the ```IsStateful``` trait on the user model and uses ```$user->remember()``` to maintain the logged in user in the session. The only thing that you need to do is to set ```'default_auth_model'``` in ```config.json``` to be able to use ```App::Request->user()``` to ```::retrieve()``` the user from the session using the ```IsStateful``` trait.
+
+Take a look at the controller, model, and views that is provided in the framework for authentication to understand it's workings. and change/improve/remove it however you like to.
+
+**Note:** For the user model to work correctly you need to create a table named ```users``` with a 2 fields:
+
+```
+TABLE:	users
+
+FIELD		TYPE
+id		int, autoincrement
+username	varchar
+password	varchar(255) //password hashing system requires 255
+```

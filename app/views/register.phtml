@@ -1,0 +1,21 @@
+
+    <?php $this->paste('partials/header'); ?>
+    
+
+  	<h2>Welcome to dejframework</h2>
+
+    <form action="/register" method="post">
+        <h3>Register:</h3>
+        <span style="color:red"><?= $this->errors('register') ?></span>
+        <br/>
+        <input type="text" name="username" placeholder="username"/>
+        <span style="color:red"><?= $this->errors('username') ?></span>
+        <br/>
+        <input type="password" name="password" placeholder="password"/>
+        <span style="color:red"><?= $this->errors('password') ?></span>
+        <br/>
+        <input type="submit" value="Register"/>
+    </form>
+    
+
+    <?php $this->paste('partials/footer') ?>

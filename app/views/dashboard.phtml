@@ -1,0 +1,10 @@
+
+<?php
+use \dej\App;
+$this->paste('partials/header');
+?>
+
+<h2>Hello <?= App::Request()->user()->username ?>!</h2>
+<a href="/logout">Logout</a>
+
+<?php $this->paste('partials/footer'); ?>

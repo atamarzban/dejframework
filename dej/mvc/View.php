@@ -14,7 +14,7 @@ class View
 
 	function __construct($viewPath = null, $data = null)
 	{
-		if($viewPath == null || $data == null) throw new \Exception("Please Provide Correct Parameters in View(viewPath, data)");
+		if($viewPath == null) throw new \Exception("Please Provide Correct Parameters in View(viewPath, data)");
 		$this->viewPath = $viewPath;
 		$this->data = $data;
 		$this->errors = App::Session()->getFlash('errors');
