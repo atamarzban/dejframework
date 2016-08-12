@@ -21,7 +21,8 @@ class Model
 		{
 			foreach ($data as $property => $value)
             {
-                $this->$property = $value;
+				if (property_exists($this, $property))
+                	$this->$property = $value;
             }
 		}
 	}
