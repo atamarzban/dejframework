@@ -6,15 +6,33 @@ namespace dej;
 class Session extends \dej\common\Singleton
 {
     public $flash;
+    public $expired = false;
 
     public function __construct()
     {
         session_start();
+
+        
+        if($this->isSaved('dej_session_lifetime') &&
+            $this->isSaved('dej_session_last_access')) {
+
+            $lifeTime = intval($this->get('dej_session_lifetime'));
+            $lastAccess = intval($this->get('dej_session_last_access'));
+            if ((time() - $lastAccess) > $lifeTime) {
+                $this->destroy();
+                $this->expired = true;
+            }
+        }
+        
+
+
         if ($this->isSaved('dej_flash'))
         {
             $this->flash = $this->get('dej_flash');
             $this->delete('dej_flash');
         }
+
+        $this->lastAccess(time());
     }
 
     public function save($keyValues = [])
@@ -102,6 +120,16 @@ class Session extends \dej\common\Singleton
     public function getFlash($key)
     {
         return $this->flash[$key];
+    }
+
+    public function lifeTime($lifeTime = null)
+    {
+        $this->save(['dej_session_lifetime' => $lifeTime]);
+    }
+
+    public function lastAccess($time = null)
+    {
+        $this->save(['dej_session_last_access' => $time]);
     }
 
 }

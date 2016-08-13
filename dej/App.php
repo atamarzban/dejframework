@@ -59,6 +59,11 @@ class App
         return \dej\Session::getInstance();
     }
 
+    public static function View($path = null, $data = null)
+    {
+        return new \dej\mvc\View($path, $data);
+    }
+
 }
 
 ?>
