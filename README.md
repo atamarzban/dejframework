@@ -549,6 +549,12 @@ $message = App::session()->getFlash('message');
 ```
 Note that flash messages are only available in the next request and only with ```->getFlash()```.
 
+You can set the session to expire after a defined time since the last access to session:
+```php
+App::Session()->save(['key' => 'value']);
+App::Session()->lifeTime(60); //session will expire after 60 seconds since last access to the session. (last use of App::Session())
+```
+
 # Stateful Models
 Sometimes you may want your application to remember an instance of a model for the next requests. For example, you want you app to remember the user that is logged in, or the shopping cart your user has, or anything else. If you store the primary key of the model that you want in the session and run a query to retrieve it in every request, it might get tedious.
 dejframework solves this by providing you with a trait that you can use in your models. Take a look:
