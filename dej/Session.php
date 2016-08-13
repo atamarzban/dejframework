@@ -114,7 +114,9 @@ class Session extends \dej\common\Singleton
 
     public function flash($keyValues = [])
     {
-        $this->save(['dej_flash' => $keyValues]);
+        $alreadyFlashed = $this->get('dej_flash');
+        $alreadyFlashed = (!empty($alreadyFlashed))? $alreadyFlashed:[];
+        $this->save(['dej_flash' => array_merge($keyValues, $alreadyFlashed)]);
     }
 
     public function getFlash($key)

@@ -51,6 +51,12 @@ class Response
         return $this;
     }
 
+    public function withMessages($messages)
+    {
+        App::Session()->flash(['messages' => $messages]);
+        return $this;
+    }
+
     public function toOutput()
     {
         
