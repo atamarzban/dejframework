@@ -15,8 +15,5 @@
       "dej\\": "",
       "app\\": ""
     }
-  },
-  "require": {
-    "philo/laravel-blade": "^3.1"
   }
 }
