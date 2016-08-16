@@ -2,6 +2,7 @@
   "name": "atamarzban/dejframework",
   "description": "A Light and Easy to use PHP Framework.",
   "minimum-stability": "stable",
+  "type": "project",
   "license": "MIT",
   "authors": [
     {
@@ -15,5 +16,10 @@
       "dej\\": "",
       "app\\": ""
     }
+  },
+
+  "require": {
+    "php": ">=5.6",
+    "philo/laravel-blade": "3.1"
   }
 }

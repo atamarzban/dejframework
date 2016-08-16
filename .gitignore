@@ -2,3 +2,4 @@
 config.json
 /vendor
 /app/views/cache
+composer.lock
