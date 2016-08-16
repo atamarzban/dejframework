@@ -389,7 +389,7 @@ private function buildCountQuery()
 		$results = $this->connection->executeQuery($this->query, $this->data);
 		if ($this->getType == "stdClass") {
 			return $results;
-		} else if (!empty($result)){
+		} else if (!empty($results)){
 			$className = "\app\models\\" . $this->getType;
 			$resultsModels = [];
 			foreach ($results as $result) {

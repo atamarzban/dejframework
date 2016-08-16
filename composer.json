@@ -1,0 +1,22 @@
+{
+  "name": "atamarzban/dejframework",
+  "description": "A Light and Easy to use PHP Framework.",
+  "minimum-stability": "stable",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Ata Marzban",
+      "email": "atamarzban@gmail.com"
+    }
+  ],
+
+  "autoload": {
+    "psr-0": {
+      "dej\\": "",
+      "app\\": ""
+    }
+  },
+  "require": {
+    "philo/laravel-blade": "^3.1"
+  }
+}
