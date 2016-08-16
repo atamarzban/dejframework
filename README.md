@@ -24,17 +24,20 @@ dejframework is a simple and minimal PHP MVC framework focused on conciseness, s
 - Storing model instances to session easily with stateful models.
 - Easily interact with the session with the Session object.
 - Flash 1-request-only messages to the session.
+- Use any PHP package using the composer package manager.
 
 # Requirements
 - Apache2
 - Mod_Rewrite (.htaccess support)
 - PHP 5.6
+- Composer
 - MySQL
 
 #Installation
 - To set up your development environment, Clone this repository or download it and put it on the machine of your choice.
 - Configure a Virtual Host on Apache and set the **/public** folder as the Document Root. All Requests go through the **/public/index.php** file on this folder. Also Enable "Mod_Rewrite" and set "AllowOverride All" on the Virtual Host.
 - Rename **/config.sample.json** to **config.json**.
+- Run ```composer install``` in the root directory.
 - That's it!
 
 # Routing
