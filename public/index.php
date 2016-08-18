@@ -9,6 +9,10 @@ set_include_path(dirname(__DIR__));
 //Composer Autoloader
 require 'vendor/autoload.php';
 
+use \dej\App;
+App::Config()->root_dir = dirname(__DIR__);
+
+
 //Load Routes
 require "app/routes.php";
 
