@@ -121,7 +121,8 @@ class Session extends \dej\common\Singleton
 
     public function getFlash($key)
     {
-        return $this->flash[$key];
+        if(isset($this->flash[$key])) return $this->flash[$key];
+        else return null;
     }
 
     public function lifeTime($lifeTime = null)

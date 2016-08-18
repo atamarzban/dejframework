@@ -61,7 +61,7 @@ class AuthController extends \dej\mvc\Controller
     public static function logout()
     {
         User::logout();
-        return App::Response()->redirect('/')->withErrors(['headerError' => 'logged out!']);
+        return App::Response()->redirect('/')->withMessages(['headerMessage' => 'logged out!']);
     }
 }
 ?>
