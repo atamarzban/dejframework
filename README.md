@@ -1,6 +1,6 @@
 ![alt text](https://dl.dropboxusercontent.com/u/34126991/dejframework.png "dejframework")
 
-# dejframework (Work in Progress)
+# dejframework
 A Light and Easy to use PHP Framework.
 
 # Introduction
